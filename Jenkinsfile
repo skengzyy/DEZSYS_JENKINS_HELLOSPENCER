@@ -26,7 +26,7 @@ pipeline {
                 sh '''
                   docker stop hellospencer-app 2>/dev/null || true
                   docker rm hellospencer-app 2>/dev/null || true
-                  docker run -d --name hellospencer-app -p 5000:5000 hellospencer:latest
+                  docker run -d --name hellospencer-app -p 5001:5000 hellospencer:latest
                 '''
             }
         }
