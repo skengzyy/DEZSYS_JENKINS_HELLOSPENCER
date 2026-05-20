@@ -1,6 +1,6 @@
 import unittest
 import time
-from app import app  # passe den Import an deinen app-Dateinamen an
+from src.hello import app  # passe den Import an deinen app-Dateinamen an
 
 class TestAPIEndpoints(unittest.TestCase):
     def setUp(self):
