@@ -6,9 +6,9 @@
 | | |
 |---|---|
 | **Projekt** | DEZSYS_JENKINS_HELLOSPENCER |
-| **Schüler** | Jonathan Joestar |
+| **Schüler** | Isaac Jerryson |
 | **Klasse / Fach** | Middleware Engineering |
-| **Schule** | HTL Rennweg |
+| **Schule** | TGM |
 | **Repository** | [github.com/skengzyy/DEZSYS_JENKINS_HELLOSPENCER](https://github.com/skengzyy/DEZSYS_JENKINS_HELLOSPENCER) |
 | **Jenkins Build #7** | [customize-denim-whacking.ngrok-free.dev/job/HelloSpencer/7/console](https://customize-denim-whacking.ngrok-free.dev/job/HelloSpencer/7/console) |
 | **ngrok Inspector** | [127.0.0.1:4040/inspect/http](http://127.0.0.1:4040/inspect/http) |
