@@ -1,74 +1,47 @@
 pipeline {
-    agent {
-        docker { 
-            image 'python:3.11' 
-            args '-p 5556:5556'
-        }
-    }
-    environment {
-        APP_PORT = '5556'
-        GITHUB_REPO = 'https://github.com/ThomasMicheler/DEZSYS_JENKINS_HELLOSPENCER.git'
-    }
+    agent any
+
     stages {
-        stage('Pre-Build Cleanup') {
+        stage('Source') {
             steps {
-                // Kill any existing Flask processes
-                sh 'pkill -f "python hello.py" || true'
+                echo 'Cloning repository...'
+                checkout scm
             }
         }
-        stage('Checkout') {
-            steps {
-                cleanWs()
-                git branch: 'main', url: "${GITHUB_REPO}"
-            }
-        }
+
         stage('Build') {
             steps {
-                sh '''
-                    python -m pip install --upgrade pip
-                    pip install flask
-                    pip install requests
-                    pip install pytest
-                    if [ ! -f count.txt ]; then
-                        echo "0" > count.txt
-                    fi
-                    chmod 666 count.txt
-                '''
+                echo 'Building Docker image...'
+                sh 'docker build -t hellospencer:latest .'
             }
         }
+
         stage('Test') {
             steps {
+                echo 'Running unit tests...'
+                sh 'docker run --rm hellospencer:latest python -m pytest tests/ -v'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
                 sh '''
-                    # Run the unit tests
-                    python -m pytest tests/test_hello.py -v
+                    docker stop hellospencer-app 2>/dev/null || true
+                    docker rm hellospencer-app 2>/dev/null || true
+                    docker run -d --name hellospencer-app -p 5000:5000 hellospencer:latest
                 '''
-            }
-        }
-        stage('Run') {
-            steps {
-                sh '''
-                    nohup python src/hello.py > app.log 2>&1 &
-                    sleep 5
-                    curl http://localhost:5556/api/hello
-                '''
-            }
-        }
-        stage('Test API') {
-            steps {
-                sh 'python tests/test_api.py'
-            }
-        }
-        stage('Keep Alive') {
-            steps {
-                // Keep the container running indefinitely
-                sh 'sleep infinity'
             }
         }
     }
+
     post {
-        always {
-            // Cleanup: Stop the Flask application
-            sh 'pkill -f "python src/hello.py" || true'
+        success {
+            echo 'Pipeline erfolgreich!'
+        }
+
+        failure {
+            echo 'Pipeline fehlgeschlagen!'
         }
     }
 }
